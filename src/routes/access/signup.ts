@@ -1,6 +1,5 @@
 import express from 'express';
 import { SuccessResponse } from '../../core/ApiResponse';
-import { RoleRequest } from '../../types/app-request';
 import crypto from 'crypto';
 import UserRepo from '../../database/repository/UserRepo';
 import { BadRequestError } from '../../core/ApiError';
@@ -11,13 +10,14 @@ import schema from './schema';
 import asyncHandler from '../../helpers/asyncHandler';
 import bcrypt from 'bcrypt';
 import { getUserData } from './utils';
+import { PublicRequest } from '../../types/app-request';
 
 const router = express.Router();
 
 router.post(
   '/basic',
   validator(schema.signup),
-  asyncHandler(async (req: RoleRequest, res) => {
+  asyncHandler(async (req: PublicRequest, res) => {
     const user = await UserRepo.findByEmail(req.body.email);
     if (user) throw new BadRequestError('User already registered');
 
@@ -31,17 +31,12 @@ router.post(
         email: req.body.email,
         profilePicUrl: req.body.profilePicUrl,
         password: passwordHash,
-        roles: req.body.roles,
       } as User,
       accessTokenKey,
       refreshTokenKey,
     );
 
-    const tokens = await createTokens(
-      createdUser,
-      keystore.primaryKey,
-      keystore.secondaryKey,
-    );
+    const tokens = await createTokens(createdUser, keystore.primaryKey, keystore.secondaryKey);
     const userData = await getUserData(createdUser);
 
     new SuccessResponse('Signup Successful', {

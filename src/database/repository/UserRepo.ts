@@ -8,43 +8,13 @@ async function exists(id: Types.ObjectId): Promise<boolean> {
   return user !== null && user !== undefined;
 }
 
-async function findPrivateProfileById(
-  id: Types.ObjectId,
-): Promise<User | null> {
-  return UserModel.findOne({ _id: id, status: true })
-    .select('email')
-    .lean<User>()
-    .exec();
-}
-
 // contains critical information of the user
 async function findById(id: Types.ObjectId): Promise<User | null> {
-  return UserModel.findOne({ _id: id, status: true })
-    .select('email +password roles')
-    .lean()
-    .exec();
+  return UserModel.findOne({ _id: id, status: true }).select('email +password roles').lean().exec();
 }
 
 async function findByEmail(email: string): Promise<User | null> {
-  return UserModel.findOne({ email: email })
-    .select(
-      'email +password roles',
-    )
-    .lean()
-    .exec();
-}
-
-async function findFieldsById(
-  id: Types.ObjectId,
-  ...fields: string[]
-): Promise<User | null> {
-  return UserModel.findOne({ _id: id, status: true }, [...fields])
-    .lean()
-    .exec();
-}
-
-async function findPublicProfileById(id: Types.ObjectId): Promise<User | null> {
-  return UserModel.findOne({ _id: id, status: true }).lean().exec();
+  return UserModel.findOne({ email: email }).select('email +password roles').lean().exec();
 }
 
 async function create(
@@ -52,13 +22,8 @@ async function create(
   accessTokenKey: string,
   refreshTokenKey: string,
 ): Promise<{ user: User; keystore: Keystore }> {
-
   const createdUser = await UserModel.create(user);
-  const keystore = await KeystoreRepo.create(
-    createdUser,
-    accessTokenKey,
-    refreshTokenKey,
-  );
+  const keystore = await KeystoreRepo.create(createdUser, accessTokenKey, refreshTokenKey);
   return {
     user: createdUser.toObject(),
     keystore: keystore,
@@ -74,11 +39,7 @@ async function update(
   await UserModel.updateOne({ _id: user._id }, { $set: { ...user } })
     .lean()
     .exec();
-  const keystore = await KeystoreRepo.create(
-    user,
-    accessTokenKey,
-    refreshTokenKey,
-  );
+  const keystore = await KeystoreRepo.create(user, accessTokenKey, refreshTokenKey);
   return { user, keystore };
 }
 
@@ -91,11 +52,8 @@ async function updateInfo(user: User): Promise<any> {
 
 export default {
   exists,
-  findPrivateProfileById,
   findById,
   findByEmail,
-  findFieldsById,
-  findPublicProfileById,
   create,
   update,
   updateInfo,

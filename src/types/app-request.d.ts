@@ -7,11 +7,7 @@ declare interface PublicRequest extends Request {
   apiKey: ApiKey;
 }
 
-declare interface RoleRequest extends PublicRequest {
-  currentRoleCodes: string[];
-}
-
-declare interface ProtectedRequest extends RoleRequest {
+declare interface ProtectedRequest extends PublicRequest {
   user: User;
   accessToken: string;
   keystore: Keystore;

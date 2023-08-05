@@ -4,10 +4,8 @@ import signup from './access/signup';
 import login from './access/login';
 import logout from './access/logout';
 import token from './access/token';
-import blog from './blog';
-import blogs from './blogs';
 import profile from './profile';
-
+import tasks from './tasks';
 const router = express.Router();
 
 /*---------------------------------------------------------*/
@@ -18,7 +16,5 @@ router.use('/login', login);
 router.use('/logout', logout);
 router.use('/token', token);
 router.use('/profile', profile);
-router.use('/blog', blog);
-router.use('/blogs', blogs);
-
+router.use('/tasks', tasks);
 export default router;

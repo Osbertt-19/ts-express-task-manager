@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import Logger from '../core/Logger';
 import { BadRequestError } from '../core/ApiError';
 import { Types } from 'mongoose';
-import { Role } from '../database/model/User';
 
 export enum ValidationSource {
   BODY = 'body',
@@ -18,12 +17,6 @@ export const JoiObjectId = () =>
     return value;
   }, 'Object Id Validation');
 
-export const JoiUrlEndpoint = () =>
-  Joi.string().custom((value: string, helpers) => {
-    if (value.includes('://')) return helpers.error('any.invalid');
-    return value;
-  }, 'Url Endpoint Validation');
-
 export const JoiAuthBearer = () =>
   Joi.string().custom((value: string, helpers) => {
     if (!value.startsWith('Bearer ')) return helpers.error('any.invalid');
@@ -31,16 +24,7 @@ export const JoiAuthBearer = () =>
     return value;
   }, 'Authorization Header Validation');
 
-  export const JoiRole = () =>
-  Joi.string().custom((value: string, helpers) => {
-    if (!Object.keys(Role).includes(value)) return helpers.error('any.invalid');
-    return value;
-  }, 'Role Validation');
-
-export default (
-    schema: Joi.AnySchema,
-    source: ValidationSource = ValidationSource.BODY,
-  ) =>
+export default (schema: Joi.AnySchema, source: ValidationSource = ValidationSource.BODY) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
       const { error } = schema.validate(req[source]);
@@ -48,9 +32,7 @@ export default (
       if (!error) return next();
 
       const { details } = error;
-      const message = details
-        .map((i) => i.message.replace(/['"]+/g, ''))
-        .join(',');
+      const message = details.map((i) => i.message.replace(/['"]+/g, '')).join(',');
       Logger.error(message);
 
       next(new BadRequestError(message));

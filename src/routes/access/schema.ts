@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { JoiAuthBearer, JoiRole } from '../../helpers/validator';
+import { JoiAuthBearer } from '../../helpers/validator';
 
 export default {
   credential: Joi.object().keys({
@@ -19,6 +19,5 @@ export default {
     email: Joi.string().required().email(),
     password: Joi.string().required().min(6),
     profilePicUrl: Joi.string().optional().uri(),
-    roles:Joi.array().items(JoiRole()),
   }),
 };

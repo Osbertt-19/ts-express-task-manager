@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import 'dotenv/config';
 // Mapper for environment variables
 export const environment = process.env.NODE_ENV;
 export const port = process.env.PORT;
@@ -6,6 +6,7 @@ export const timezone = process.env.TZ;
 
 export const db = {
   name: process.env.DB_NAME || '',
+  testName: process.env.TEST_DB_NAME || '',
   host: process.env.DB_HOST || '',
   port: process.env.DB_PORT || '',
   user: process.env.DB_USER || '',
@@ -32,7 +33,5 @@ export const redis = {
 };
 
 export const caching = {
-  contentCacheDuration: parseInt(
-    process.env.CONTENT_CACHE_DURATION_MILLIS || '600000',
-  ),
+  contentCacheDuration: parseInt(process.env.CONTENT_CACHE_DURATION_MILLIS || '600000'),
 };

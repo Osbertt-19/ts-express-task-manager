@@ -1,9 +1,13 @@
 import mongoose from 'mongoose';
 import Logger from '../core/Logger';
-import { db } from '../config';
+import { db, environment } from '../config';
 
 // Build the connection string
-const dbURI = `mongodb://${db.host}:${db.port}/${db.name}`;
+let dbName = db.name;
+if (environment == 'test') {
+  dbName = db.testName;
+}
+const dbURI = `mongodb://${db.host}:${db.port}/${dbName}`;
 
 const options = {
   // autoIndex: true,

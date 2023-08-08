@@ -22,7 +22,10 @@ app.use(express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 5000
 app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 
 // Routes
-app.use('/', routes);
+app.use('/api/v1/', routes);
+app.get('/healthcheck', (req, res) => {
+  res.json({ status: 200, message: 'pretty fine' });
+});
 
 // catch 404 and forward to error handler
 app.use(notFound);

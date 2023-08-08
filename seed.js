@@ -16,6 +16,6 @@ const seed=(dbName)=>{
     createdAt: new Date(),
     updatedAt: new Date(),
   })
-  
+  client.close();
 }
 seed('tasks-test-db')

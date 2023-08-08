@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon",
     "upgrade": "npm update --save-dev && npm update --save",
-    "test": "jest --forceExit --detectOpenHandles --coverage --verbose"
+    "test": "jest --forceExit --detectOpenHandles "
   },
   "repository": {
     "type": "git",
